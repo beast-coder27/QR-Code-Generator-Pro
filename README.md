@@ -29,6 +29,8 @@ start .\index.html
 
 - `index.html` — The complete UI and logic (uses `https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js`).
 - `README.md` — This documentation.
+- #demo
+- site:https://beast-coder27.github.io/QR-Code-Generator-Pro/
 
 **Troubleshooting**
 
@@ -46,4 +48,4 @@ start .\index.html
 - Add a small UI for logo embedding or SVG export.
 - Add unit/integration tests and a CI workflow if you plan to extend the app.
 
-If you want, I can commit these changes, add a `LICENSE` file, or prepare a one-click GitHub Pages deployment. What would you like next?
+
