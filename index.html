@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Code Generator Pro</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .app {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 25px;
+      padding: 40px 30px;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+
+    h1 {
+      margin-bottom: 15px;
+      font-weight: 600;
+      font-size: 26px;
+      letter-spacing: 1px;
+    }
+
+    p {
+      margin-top: 0;
+      color: #e0e0e0;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      margin-top: 10px;
+      font-size: 16px;
+      outline: none;
+      color: #333;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 13px;
+      color: #fff;
+      display: block;
+      text-align: left;
+      margin-bottom: 4px;
+    }
+
+    input[type="color"] {
+      padding: 0;
+      height: 40px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button {
+      width: 48%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .generate {
+      background: linear-gradient(90deg, #43cea2, #185a9d);
+      color: white;
+    }
+
+    .reset {
+      background: rgba(255,255,255,0.3);
+      color: white;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    #qrcode {
+      display: none;
+      margin: 25px auto 10px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 15px;
+      width: fit-content;
+      animation: qrAppear 0.5s ease-out;
+    }
+
+    #downloadBtn {
+      display: none;
+      background: #ff9966;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    #message {
+      margin-top: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #a3ffb4;
+      display: none;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes qrAppear {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes buttonAppear {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>QR Code Generator Pro ✨</h1>
+    <p>Generate a beautiful and downloadable QR code instantly!</p>
+
+    <input id="text" type="text" placeholder="Enter Name or URL" />
+
+    <div class="options">
+      <div>
+        <label>QR Color</label>
+        <input type="color" id="qrColor" value="#000000">
+      </div>
+      <div>
+        <label>Background</label>
+        <input type="color" id="bgColor" value="#ffffff">
+      </div>
+    </div>
+
+    <label>Size</label>
+    <select id="size">
+      <option value="150">150x150</option>
+      <option value="200" selected>200x200</option>
+      <option value="250">250x250</option>
+      <option value="300">300x300</option>
+    </select>
+
+    <div style="margin-top:15px;">
+      <button class="generate" onclick="generateQR()">Generate</button>
+      <button class="reset" onclick="resetQR()">Reset</button>
+    </div>
+
+    <div id="qrcode"></div>
+    <button id="downloadBtn" onclick="downloadQR()">Download QR</button>
+
+    <div id="message">🎉 QR Code generated successfully!</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <script>
+    let qr;
+
+    function generateQR() {
+      const container = document.getElementById("qrcode");
+      container.innerHTML = "";
+
+      let text = document.getElementById("text").value.trim();
+      const qrColor = document.getElementById("qrColor").value;
+      const bgColor = document.getElementById("bgColor").value;
+      const size = parseInt(document.getElementById("size").value);
+      const message = document.getElementById("message");
+
+      if (text === "") {
+        alert("Please enter a name or URL!");
+        return;
+      }
+
+      qr = new QRCode(container, {
+        text: text,
+        width: size,
+        height: size,
+        colorDark: qrColor,
+        colorLight: bgColor,
+      });
+
+      container.style.display = "block";
+      document.getElementById("downloadBtn").style.display = "inline-block";
+
+      message.style.display = "block";
+      message.innerText = "🎉 QR Code generated successfully!";
+    }
+
+    function downloadQR() {
+      const qrCanvas = document.querySelector("#qrcode canvas");
+      if (!qrCanvas) {
+        alert("Please generate the QR code first!");
+        return;
+      }
+      const link = document.createElement("a");
+      link.download = "qrcode.png";
+      link.href = qrCanvas.toDataURL("image/png");
+      link.click();
+    }
+
+    function resetQR() {
+      document.getElementById("text").value = "";
+      document.getElementById("qrcode").style.display = "none";
+      document.getElementById("downloadBtn").style.display = "none";
+      document.getElementById("qrcode").innerHTML = "";
+      document.getElementById("message").style.display = "none";
+    }
+
+    document.getElementById("text").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") generateQR();
+    });
+  </script>
+</body>
+</html>
